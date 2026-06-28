@@ -1,0 +1,168 @@
+{
+  "meta": {
+    "totalTopics": 49,
+    "completedTopics": 6,
+    "inProgress": "2.2",
+    "lastUpdated": "2026-06-08",
+    "startedAt": "2026-05-15"
+  },
+  "modules": [
+    { "id": 0, "title": "Модуль 0 — TypeScript для Vue", "color": "#6366f1", "topicsCount": 6 },
+    { "id": 1, "title": "Модуль 1 — Архитектура Vue", "color": "#f97316", "topicsCount": 9 },
+    { "id": 2, "title": "Модуль 2 — Паттерны проектирования", "color": "#8b5cf6", "topicsCount": 10 },
+    { "id": 3, "title": "Модуль 3 — Composables", "color": "#06b6d4", "topicsCount": 9 },
+    { "id": 4, "title": "Модуль 4 — Vue Router", "color": "#10b981", "topicsCount": 8 },
+    { "id": 5, "title": "Модуль 5 — Тестирование", "color": "#f59e0b", "topicsCount": 8 },
+    { "id": 6, "title": "Модуль 6 — Производительность", "color": "#ef4444", "topicsCount": 6 },
+    { "id": 7, "title": "Модуль 7 — Интеграция и практика", "color": "#ec4899", "topicsCount": 4 }
+  ],
+  "topics": [
+    {
+      "id": "0.1",
+      "moduleId": 0,
+      "title": "Типы-основа",
+      "focus": "Фундамент",
+      "status": "completed",
+      "completedAt": "2026-05-16",
+      "attempts": 2,
+      "review": {
+        "critical": 0,
+        "warning": 0,
+        "good": 1,
+        "summary": "notification?.error→code, narrowing с опциональными полями"
+      },
+      "cheatCard": {
+        "rule": "interface — для объектов, type — для unions/intersections. Narrowing через type guards и in-оператор.",
+        "code": "type Status = 'idle' | 'loading' | 'success' | 'error'\n\ninterface User { id: number; name: string; email?: string }\n\nfunction isUser(obj: unknown): obj is User {\n  return typeof obj === 'object' && obj !== null && 'id' in obj\n}",
+        "tags": ["typescript", "типы", "narrowing", "union"]
+      },
+      "keyNotes": [
+        "Опциональные поля требуют проверки перед использованием",
+        "as-утверждения — крайняя мера, лучше narrowing"
+      ]
+    },
+    {
+      "id": "1.1",
+      "moduleId": 1,
+      "title": "Feature-based vs Layer-based",
+      "focus": "Организация кода",
+      "status": "completed",
+      "completedAt": "2026-05-18",
+      "attempts": 2,
+      "review": {
+        "critical": 0,
+        "warning": 3,
+        "good": 2,
+        "summary": "Dashboard как page, shared/ границы, вопросы не отвечены"
+      },
+      "cheatCard": {
+        "rule": "Feature-based — файлы рядом с фичей. Layer-based — файлы по типу (components/, stores/). В малых проектах — feature-based.",
+        "code": "// Feature-based:\nfeatures/users/\n  components/  composables/  types.ts\n\n// Layer-based:\ncomponents/  composables/  types/\n  UserList.vue  useUsers.ts  user.ts",
+        "tags": ["архитектура", "структура", "организация"]
+      },
+      "keyNotes": [
+        "Не смешивать подходы в одном проекте",
+        "shared/ — только переиспользуемое между фичами"
+      ]
+    },
+    {
+      "id": "0.2",
+      "moduleId": 0,
+      "title": "Generics",
+      "focus": "Composables & API",
+      "status": "completed",
+      "completedAt": "2026-05-23",
+      "attempts": 2,
+      "review": {
+        "critical": 5,
+        "warning": 3,
+        "good": 2,
+        "summary": "Много ошибок в ограничениях дженериков и type inference"
+      },
+      "cheatCard": {
+        "rule": "Ограниченные дженерики через extends. ReturnType<T>, type inference в composables — ключ к типобезопасности.",
+        "code": "function useApi<T>(url: string) {\n  const data = ref<T | null>(null)\n  // T выводится из места вызова\n  return { data: readonly(data) }\n}\n\n// Вызов:\nconst { data } = useApi<User[]>('/api/users')",
+        "tags": ["typescript", "generics", "composables", "типобезопасность"]
+      },
+      "keyNotes": [
+        "extends ограничивает, а не расширяет",
+        "Type inference работает от аргументов функции"
+      ]
+    },
+    {
+      "id": "2.1",
+      "moduleId": 2,
+      "title": "Presentation vs Container",
+      "focus": "Разделение",
+      "status": "completed",
+      "completedAt": "2026-05-28",
+      "attempts": 1,
+      "review": {
+        "critical": 9,
+        "warning": 3,
+        "good": 1,
+        "summary": "Дебаг-вывод в Container, имена пропсов/emit не совпадают, deleteTask с ошибкой"
+      },
+      "cheatCard": {
+        "rule": "Container управляет состоянием, Presentation рендерит. Props вниз (данные), emit вверх (события). Имена пропсов = имена emit-событий с on-префиксом.",
+        "code": "// Container\n<Presentation\n  :tasks=\"tasks\"\n  @delete=\"handleDelete\"\n/>\n\n// Presentation (props + emit)\nconst props = defineProps<{ tasks: Task[] }>()\nconst emit = defineEmits<{ delete: [id: number] }>()",
+        "tags": ["паттерны", "компоненты", "разделение"]
+      },
+      "keyNotes": [
+        "Container не содержит template-логики",
+        "Presentation не содержит fetch/бизнес-логики",
+        "Имена пропсов и emit должны совпадать концептуально"
+      ]
+    },
+    {
+      "id": "3.1",
+      "moduleId": 3,
+      "title": "Анатомия composable",
+      "focus": "Стандарт",
+      "status": "completed",
+      "completedAt": "2026-05-25",
+      "attempts": 1,
+      "review": {
+        "critical": 0,
+        "warning": 5,
+        "good": 3,
+        "summary": "Отличная архитектура, JSDoc + naming замечания"
+      },
+      "cheatCard": {
+        "rule": "Композабл = JSDoc + типизированный возврат + readonly на state. Ошибки — через throw, не ref(error).",
+        "code": "/** Управление списком задач */\nexport function useTasks() {\n  const tasks = ref<Task[]>([])\n  const loading = ref(false)\n\n  return {\n    tasks: readonly(tasks),\n    loading: readonly(loading),\n    addTask,\n    removeTask,\n  }\n}",
+        "tags": ["composables", "архитектура", "typescript"]
+      },
+      "keyNotes": [
+        "JSDoc обязателен для публичных композаблов",
+        "readonly на всё состояние, которое не должно мутироваться снаружи",
+        "Типизированный возврат (интерфейс) — часть контракта"
+      ]
+    },
+    {
+      "id": "1.2",
+      "moduleId": 1,
+      "title": "Слои приложения",
+      "focus": "Разделение ответственностей",
+      "status": "completed",
+      "completedAt": "2026-06-02",
+      "attempts": 1,
+      "review": {
+        "critical": 2,
+        "warning": 3,
+        "good": 7,
+        "summary": "export забыт, res.ok потерян при рефакторинге, нейминг. Исправлено."
+      },
+      "cheatCard": {
+        "rule": "UI → Feature → Domain ← Data. Каждый слой зависит только от нижнего. Domain — чистый TS без Vue.",
+        "code": "// Domain: чистый TS, без Vue\n// Data: fetch + проверка res.ok\n// Feature: use* композабл\n// UI: только рендеринг и emit",
+        "tags": ["слои", "архитектура", "зависимости", "рефакторинг"]
+      },
+      "keyNotes": [
+        "export не забывать у интерфейсов в domain",
+        "res.ok проверять в data-слое (не терять при рефакторинге)",
+        "readonly для ref в композаблах"
+      ]
+    }
+  ]
+}

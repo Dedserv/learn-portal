@@ -1,0 +1,18 @@
+# deps
+node_modules/
+.nuxt/
+.output/
+dist/
+
+# IDE
+.vscode/
+.idea/
+
+# DB
+server/data/*.db
+server/data/*.db-wal
+server/data/*.db-shm
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,36 @@
+{
+  "id": "2.2",
+  "moduleId": 2,
+  "title": "Renderless Components",
+  "focus": "Абстракция логики без UI",
+  "sections": [
+    {
+      "type": "text",
+      "heading": "Что такое Renderless Component",
+      "content": "Компонент без собственного шаблона. Вся логика вынесена в composable или setup, а рендеринг отдаётся через **scoped slot** пользователю компонента."
+    },
+    {
+      "type": "code",
+      "heading": "Пример: useMouse",
+      "language": "ts",
+      "code": "function useMouse() {\n  const x = ref(0)\n  const y = ref(0)\n  onMounted(() => window.addEventListener('mousemove', update))\n  onUnmounted(() => window.removeEventListener('mousemove', update))\n  function update(e: MouseEvent) {\n    x.value = e.clientX\n    y.value = e.clientY\n  }\n  return { x, y }\n}",
+      "caption": "Отслеживает позицию мыши"
+    },
+    {
+      "type": "mermaid",
+      "heading": "Как это работает",
+      "diagram": "flowchart LR\n  Composable[\"Composable (логика)\"] --> Component[\"Renderless Component\"]\n  Component --> User[\"Пользовательский UI\"]",
+      "caption": "Composable не знает о DOM"
+    }
+  ],
+  "cheatCard": {
+    "rule": "Renderless = composable + scoped slot. Логика в composable, рендеринг через слот.",
+    "code": "<MouseTracker v-slot=\"{ x, y }\">\n  <div>{{ x }}, {{ y }}</div>\n</MouseTracker>",
+    "tags": ["renderless", "slots", "patterns"]
+  },
+  "keyNotes": [
+    "Вся логика в composable, UI через слот",
+    "Renderless ≠ без шаблона",
+    "scoped slot типизируется через generic компонента"
+  ]
+}

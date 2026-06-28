@@ -1,0 +1,66 @@
+// Design tokens — unified portal, dark theme only.
+// Based on portal tokens.scss from vue-learning-portal.
+
+// Layer colors (module-specific)
+$color-ui: #f97316;
+$color-feature: #8b5cf6;
+$color-domain: #06b6d4;
+$color-data: #10b981;
+
+// Module palette (mapped to spec modules M0-M7)
+$module-colors: (
+  0: #6366f1,
+  1: #f97316,
+  2: #8b5cf6,
+  3: #06b6d4,
+  4: #10b981,
+  5: #f59e0b,
+  6: #ef4444,
+  7: #ec4899,
+);
+
+// Surfaces
+$bg: #0a0a0f;
+$card: #12121a;
+$border: #1e1e2e;
+$text: #e4e4e7;
+$muted: #71717a;
+$radius: 12px;
+
+// Semantic
+$ok: #10b981;
+$warn: #f59e0b;
+$err: #ef4444;
+
+// Typography
+$font: 'Manrope', system-ui, sans-serif;
+$mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+// Spacing
+$gap: 16px;
+$section-gap: 40px;
+
+// Mixins
+@mixin card {
+  background: $card;
+  border: 1px solid $border;
+  border-radius: $radius;
+  padding: 20px 24px;
+}
+
+@mixin card-hover {
+  transition: border-color 0.2s, transform 0.2s;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+@mixin section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: $muted;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+}
