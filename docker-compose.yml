@@ -20,3 +20,12 @@ services:
     volumes:
       # SQLite база должна переживать пересборку контейнера
       - ./server/data:/app/server/data
+  db-setup:
+    build:
+      context: .
+      target: builder
+    volumes:
+      - ./server/data:/app/server/data
+    working_dir: /app
+    profiles: ['setup']
+    command: sh -c "npm run seed:topics && npm run migrate:progress"
