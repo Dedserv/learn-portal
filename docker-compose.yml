@@ -1,11 +1,22 @@
-version: '3.8'
+# LearnPortal — учебный портал на learn.sobakasobaka.ru
+# Nuxt 4 SSR (Nitro) + SQLite
 
 services:
   learn-portal:
     build: .
     container_name: learn-portal
-    ports:
-      - '3000:3000'
-    volumes:
-      - ./server/data:/app/server/data
     restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      # NITRO_HOST и NITRO_PORT уже в Dockerfile,
+      # но можно продублировать для надёжности
+      NITRO_HOST: 0.0.0.0
+      NITRO_PORT: 3000
+    ports:
+      # Только localhost — nginx на хосте разрулит
+      - '127.0.0.1:3003:3000'
+    volumes:
+      # SQLite база должна переживать пересборку контейнера
+      - ./server/data:/app/server/data
