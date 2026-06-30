@@ -1,31 +1,47 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import {ref, watch, onMounted, nextTick} from 'vue';
 
 const props = defineProps<{
-  heading: string
-  diagram: string
-  caption?: string
-}>()
+  heading: string;
+  diagram: string;
+  caption?: string;
+}>();
 
-const containerRef = ref<HTMLElement | null>(null)
-const error = ref(false)
+const containerRef = ref<HTMLElement | null>(null);
+const error = ref(false);
+const clientReady = ref(false);
 
 async function renderDiagram() {
-  if (!containerRef.value || !props.diagram) return
-  error.value = false
+  if (!containerRef.value || !props.diagram) return;
+  error.value = false;
   try {
-    const mermaid = (await import('mermaid')).default
-    mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'strict' })
-    const id = `mermaid-${Math.random().toString(36).slice(2)}`
-    const { svg } = await mermaid.render(id, props.diagram)
-    containerRef.value.innerHTML = svg
+    const mermaid = (await import('mermaid')).default;
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'dark',
+      securityLevel: 'strict',
+    });
+    const id = `mermaid-${Math.random().toString(36).slice(2)}`;
+    const {svg} = await mermaid.render(id, props.diagram);
+    containerRef.value.innerHTML = svg;
   } catch {
-    error.value = true
+    error.value = true;
   }
 }
 
-onMounted(renderDiagram)
-watch(() => props.diagram, renderDiagram)
+onMounted(() => {
+  nextTick(() => {
+    clientReady.value = true;
+    nextTick(renderDiagram);
+  });
+});
+
+watch(
+  () => props.diagram,
+  () => {
+    if (clientReady.value) renderDiagram();
+  },
+);
 </script>
 
 <template>
